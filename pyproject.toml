@@ -1,0 +1,31 @@
+[tool.poetry]
+name = "dataone-gse"
+version = "0.1.0"
+description = "DataONE geospatial workflow engine."
+authors = ["Rushiraj Nenuji <nenuji@nceas.ucsb.edu>"]
+license = "MIT"
+readme = "README.md"
+homepage = "https://github.com/rushirajnenuji/dataone-gse"
+repository = "https://github.com/rushirajnenuji/dataone-gse"
+
+# Define the source folder for your package
+packages = [
+    { include = "app", from = "src" }
+]
+
+[tool.poetry.dependencies]
+python = "^3.9"
+uvicorn = "^0.32.0"
+fastapi = "^0.115.3"
+pydantic = "^2.9.2"     # For data validation
+pytest = "^8.3.3"       # Testing framework
+
+[tool.poetry.dev-dependencies]
+black = "^24.10.0"      # Code formatter
+flake8 = "^7.1.1"       # Linter
+mypy = "^1.13.0"        # Type checker
+isort = "^5.13.2"       # Import sorter
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"

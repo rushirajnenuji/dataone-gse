@@ -1,0 +1,59 @@
+apiVersion: "argoproj.io/v1alpha1"
+kind: "Workflow"
+metadata:
+  generateName: "ogdc-recipe-ice-basins-pdg-"
+  labels:
+    workflows.argoproj.io/archive-strategy: "false"
+  annotations:
+    workflows.argoproj.io/description: |
+      This workflow creates PDG visualization tiles for the QGreenland ice basins layer.
+spec:
+  entrypoint: "main"
+  templates:
+  - name: "main"
+    steps:
+    - - name: create-output-dir
+        template: create-dir
+      - name: stage
+        template: stage
+
+  - name: create-dir
+    container:
+      image: busybox
+      command: [sh, -c]
+      args: ["mkdir -p /mnt/workflow/output/staged"]
+      volumeMounts:
+      - name: ice-basins-pvc
+        mountPath: /mnt/workflow
+
+  - name: stage
+    inputs:
+      artifacts:
+        - name: "viz-config-json"
+          http:
+            url: "https://gist.githubusercontent.com/rushirajnenuji/ad3a735e543c78483e4796386a34be35/raw/ee71e9b80c7c292e3b0315ac55596921c91b8b87/config.json"
+          path: "/mnt/workflow/config.json"
+        - name: "pdgstager"
+          http:
+            url: "https://gist.githubusercontent.com/rushirajnenuji/ad3a735e543c78483e4796386a34be35/raw/f53b687613df4053c6e506d2f5608fb9f288ab51/runner.py"
+          path: "/mnt/workflow/runner.py"
+        - name: "input"
+          http:
+            url: "https://github.com/QGreenland-Net/argo-exploration/raw/medium-workflow/data/Ice_Basins_1000.gpkg"
+          path: "/mnt/workflow/input/ice_basins.gpkg"
+    container:  
+      image: "ghcr.io/mfisher87/pdgstaging"
+      command: ["python"]
+      args: ["/mnt/workflow/runner.py"]
+      volumeMounts:
+        - name: ice-basins-pvc
+          mountPath: /mnt/workflow
+    outputs:
+      artifacts:
+        - name: "staging-output"
+          path: "/mnt/workflow/output/staged"
+  
+  volumes:
+  - name: ice-basins-pvc
+    persistentVolumeClaim:
+      claimName: ice-basins-pvc  # Change this to your PVC name

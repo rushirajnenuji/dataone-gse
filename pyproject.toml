@@ -19,6 +19,7 @@ uvicorn = "^0.32.0"
 fastapi = "^0.115.3"
 pydantic = "^2.9.2"     # For data validation
 pytest = "^8.3.3"       # Testing framework
+hera = "^5.17.1"
 
 [tool.poetry.dev-dependencies]
 black = "^24.10.0"      # Code formatter

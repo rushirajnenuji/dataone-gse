@@ -16,6 +16,7 @@ with Workflow(
     generate_name="ogdc-recipe-ice-basins-pdg-",
     entrypoint="main",
     namespace="argo",
+    service_account_name="argo-workflow",
     labels={"workflows.argoproj.io/archive-strategy": "false"},
     annotations={
         "workflows.argoproj.io/description": "This workflow creates PDG visualization tiles for the QGreenland ice basins layer."

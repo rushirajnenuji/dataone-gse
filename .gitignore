@@ -25,3 +25,6 @@ dist/
 # Docker
 .dockerignore
 
+helm/charts
+helm/Chart.lock
+

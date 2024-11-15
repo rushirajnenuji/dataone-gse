@@ -8,21 +8,21 @@ def _get_container(name: str, image: str, command: List[str], args: List[str], m
         image=image,
         command=command,
         args=args,
-        volume_mounts=[m.VolumeMount(name="ice-basins-pvc", mount_path=mount_path)],
+        volume_mounts=[m.VolumeMount(name="workflow-pvc", mount_path=mount_path)],
     )
 
 # Define workflow context
 with Workflow(
     generate_name="ogdc-recipe-ice-basins-pdg-",
     entrypoint="main",
-    namespace="argo",
+    namespace="argo-helm",
     service_account_name="argo-workflow",
     labels={"workflows.argoproj.io/archive-strategy": "false"},
     annotations={
         "workflows.argoproj.io/description": "This workflow creates PDG visualization tiles for the QGreenland ice basins layer."
     },
     volumes=[
-        m.Volume(name="ice-basins-pvc", persistent_volume_claim={"claim_name": "ice-basins-pvc"})
+        m.Volume(name="workflow-pvc", persistent_volume_claim={"claim_name": "workflow-pvc"})
     ],
     workflows_service=WorkflowsService(host="https://localhost:2746", verify_ssl=False)
 ) as wf:
@@ -61,7 +61,7 @@ with Workflow(
             )
         ],
         outputs=[Artifact(name="staging-output", path="/mnt/workflow/output/staged")],
-        volume_mounts=[m.VolumeMount(name="ice-basins-pvc", mount_path="/mnt/workflow")]
+        volume_mounts=[m.VolumeMount(name="workflow-pvc", mount_path="/mnt/workflow")]
     )
 
     # Define the main steps with create-output-dir and stage tasks

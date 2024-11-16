@@ -1,7 +1,5 @@
 ### DataONE GeoSpatial Engine 
 
-Here’s a simple README file for your DataONE Geospatial Engine project, including sections for installation and running the application.
-
 ```markdown
 # DataONE Geospatial Engine
 

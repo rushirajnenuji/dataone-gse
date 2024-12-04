@@ -31,7 +31,7 @@ spec:
       artifacts:
         - name: "viz-config-json"
           http:
-            url: "https://gist.githubusercontent.com/rushirajnenuji/ad3a735e543c78483e4796386a34be35/raw/ee71e9b80c7c292e3b0315ac55596921c91b8b87/config.json"
+            url: "https://gist.githubusercontent.com/rushirajnenuji/ad3a735e543c78483e4796386a34be35/raw/f384638d15dc5112e27d8701b282d08fb41cc3aa/config.json"
           path: "/mnt/workflow/config.json"
         - name: "pdgstager"
           http:
@@ -42,7 +42,7 @@ spec:
             url: "https://github.com/QGreenland-Net/argo-exploration/raw/medium-workflow/data/Ice_Basins_1000.gpkg"
           path: "/mnt/workflow/input/ice_basins.gpkg"
     container:  
-      image: "ghcr.io/mfisher87/pdgstaging"
+      image: "ghcr.io/rushirajnenuji/viz-staging:latest"
       command: ["python"]
       args: ["/mnt/workflow/runner.py"]
       volumeMounts:

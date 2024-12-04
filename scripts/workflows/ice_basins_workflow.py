@@ -15,7 +15,7 @@ def _get_container(name: str, image: str, command: List[str], args: List[str], m
 with Workflow(
     generate_name="ogdc-recipe-ice-basins-pdg-",
     entrypoint="main",
-    namespace="argo-helm",
+    namespace="qgnet",
     service_account_name="argo-workflow",
     labels={"workflows.argoproj.io/archive-strategy": "false"},
     annotations={
@@ -39,7 +39,7 @@ with Workflow(
     # Define the stage container with inputs and outputs
     stage_task = Container(
         name="stage",
-        image="ghcr.io/mfisher87/pdgstaging",
+        image="ghcr.io/rushirajnenuji/vizraster:latest",
         command=["python"],
         args=["/mnt/workflow/runner.py"],
         inputs=[

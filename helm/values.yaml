@@ -138,7 +138,7 @@ argo-workflows:
       artifactRepository:
         s3:
           bucket: argo-workflows
-          endpoint: gse-minio:9000
+          endpoint: ogdc-minio:9000
           accessKeySecret:
             name: minio-credentials
             key: root-user

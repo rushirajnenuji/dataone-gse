@@ -86,6 +86,10 @@ with Workflow(
                 url="https://gist.githubusercontent.com/rushirajnenuji/ad3a735e543c78483e4796386a34be35/raw/a1e0cda4107ab175379c1686db7352623ad90c26/raster-runner.py"
             )
         ],
+        outputs=[
+            Artifact(name="geotiffs", path="/mnt/workflow/output/raster/geotiff"), 
+            Artifact(name="web-tiles", path="/mnt/workflow/output/raster/web-tiles")
+        ],
         volume_mounts=[m.VolumeMount(name="workflow-pvc", mount_path="/mnt/workflow")]
     )
 

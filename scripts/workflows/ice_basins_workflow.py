@@ -1,4 +1,4 @@
-from hera.workflows import Workflow, Steps, models as m, Artifact, Container, WorkflowsService, HTTPArtifact, WorkflowStatus
+from hera.workflows import Workflow, Steps, models as m, Artifact, Container, WorkflowsService, HTTPArtifact
 from typing import List
 
 # Function to create a container with mounted volume and specified arguments
@@ -34,7 +34,7 @@ with Workflow(
         name="create-pdg-dir",
         image="busybox",
         command=["sh", "-c"],
-        args=["mkdir -p {/mnt/workflow/output/staged,/mnt/workflow/input}"],
+        args=["mkdir -p {/mnt/workflow/output/staged,/mnt/workflow/input,/mnt/workflow/output,/mnt/workflow/output/geotiffs,/mnt/workflow/output/web-tiles}"],
         mount_path="/mnt/workflow"
     )
     
@@ -62,7 +62,26 @@ with Workflow(
             )
 
         ],
-        outputs=[Artifact(name="staging-output", path="/mnt/workflow/output/staged")],
+        outputs=[
+            Artifact(name="staging-output", path="/mnt/workflow/output/staged"), 
+            Artifact(name="viz-config-json", path="/mnt/workflow/config.json")
+        ],
+        volume_mounts=[m.VolumeMount(name="workflow-pvc", mount_path="/mnt/workflow")]
+    )
+
+    # Define the raster container using outputs from the staging task
+    rasterization = Container(
+        name="raster",
+        image="ghcr.io/rushirajnenuji/viz-raster:latest",  # Update with actual image
+        command=["python"],
+        args=["/mnt/workflow/raster_runner.py"],  # Replace with actual script
+        inputs=[
+            HTTPArtifact(
+                name="pdgraster-runner",
+                path="/mnt/workflow/raster_runner.py",
+                url="https://gist.githubusercontent.com/rushirajnenuji/ad3a735e543c78483e4796386a34be35/raw/a1e0cda4107ab175379c1686db7352623ad90c26/raster-runner.py"
+            )
+        ],
         volume_mounts=[m.VolumeMount(name="workflow-pvc", mount_path="/mnt/workflow")]
     )
 
@@ -70,6 +89,7 @@ with Workflow(
     with Steps(name="main") as main_steps:
         create_dir(name="create-pdg-dir")
         tiling_task(name="staging", dependencies=[create_dir])
+        rasterization(name="raster", dependencies=[tiling_task])
 
 # Workflow submission
 wf.create()

@@ -34,7 +34,11 @@ with Workflow(
         name="create-pdg-dir",
         image="busybox",
         command=["sh", "-c"],
-        args=["mkdir -p {/mnt/workflow/output/staged,/mnt/workflow/input,/mnt/workflow/output,/mnt/workflow/output/geotiffs,/mnt/workflow/output/web-tiles}"],
+        args=[
+            "mkdir -p /mnt/workflow/output/staged /mnt/workflow/input "
+            "/mnt/workflow/output /mnt/workflow/output/raster "
+            "/mnt/workflow/output/raster/geotiff /mnt/workflow/output/raster/web-tiles"
+        ],
         mount_path="/mnt/workflow"
     )
     

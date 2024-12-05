@@ -2,25 +2,6 @@
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
-# This will set the replicaset count more information can be found here: https://kubernetes.io/docs/concepts/workloads/controllers/replicaset/
-replicaCount: 1
-
-# This sets the container image more information can be found here: https://kubernetes.io/docs/concepts/containers/images/
-image:
-  repository: nginx
-  # This sets the pull policy for images.
-  pullPolicy: IfNotPresent
-  # Overrides the image tag whose default is the chart appVersion.
-  tag: ""
-
-# This is for the secretes for pulling an image from a private repository more information can be found here: https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/
-imagePullSecrets: []
-# This is to override the chart name.
-nameOverride: ""
-fullnameOverride: ""
-
-
-
 #This section builds out the service account more information can be found here: https://kubernetes.io/docs/concepts/security/service-accounts/
 serviceAccount:
   # Specifies whether a service account should be created
@@ -132,7 +113,7 @@ argo-workflows:
     ## @param server.resourcesPreset Set container resources according to one common preset (allowed values: none, nano, micro, small, medium, large, xlarge, 2xlarge). This is ignored if server.resources is set (server.resources is recommended for production).
     ## More information: https://github.com/bitnami/charts/blob/main/bitnami/common/templates/_resources.tpl#L15
     ##
-    resourcesPreset: "medium"
+    resourcesPreset: "micro"
     
     auth:
       ## @param server.auth.mode Set authentication mode. Either `server`, `client` or `sso`.
@@ -148,7 +129,7 @@ argo-workflows:
   ## Argo Workflows Controller
   ##
   controller:
-    resourcesPreset: "large"
+    resourcesPreset: "micro"
     
     workflowNamespaces:
       - qgnet
@@ -159,11 +140,11 @@ argo-workflows:
           bucket: argo-workflows
           endpoint: gse-minio:9000
           accessKeySecret:
-            name: minio
-            key: rootUser
+            name: minio-credentials
+            key: root-user
           secretKeySecret:
-            name: minio
-            key: rootPassword
+            name: minio-credentials
+            key: root-password
           insecure: true
 
   ## @section Executor configuration section
@@ -174,7 +155,7 @@ argo-workflows:
     ## @param executor.resourcesPreset Set container resources according to one common preset (allowed values: none, nano, micro, small, medium, large, xlarge, 2xlarge). This is ignored if executor.resources is set (executor.resources is recommended for production).
     ## More information: https://github.com/bitnami/charts/blob/main/bitnami/common/templates/_resources.tpl#L15
     ##
-    resourcesPreset: "nano"
+    resourcesPreset: "micro"
 
   ## @section Workflows configuration
   ##
